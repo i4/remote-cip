@@ -17,7 +17,7 @@ for ($i = 0; $i < 32; ++$i) {
 }
 
 # HTML 5 Client
-$xpra_client_base = $_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']).'/';
+$xpra_client_base = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']).'/';
 $xpra_client_param = array(
 		'ssl' => 'true',
 		'video' => 'false',
@@ -132,7 +132,7 @@ foreach ($host_ids as $host_id) {
 					if (ssh2_exec_wrapper($ssh, 'echo -n '.$wssecret.' > '.$wssecretfile)
 					 && ssh2_exec_wrapper($ssh, 'xpra start --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
 						// Set websocket
-						$xpra_client_param['path'] = '/remoteide'.$host_id.($port % 100).'/';
+						$xpra_client_param['path'] = '/remoteide'.$host_id.($port % 100 < 10 ? '0' : '').($port % 100).'/';
 						// Redirect
 						header('Location: '.$xpra_client_base.'index.html?'.http_build_query($xpra_client_param), true, 307);
 					} else {
