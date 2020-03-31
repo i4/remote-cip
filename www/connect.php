@@ -83,7 +83,7 @@ function ssh2_exec_wrapper($con, $cmd) {
 }
 
 function connectpage($msg) {
-	header('Location: '.$xpra_client_base.'connect.html'.(!empty($msg) ? '?disconnect='.urlencode($msg) : ''), true, 307);
+	header('Location: '.$xpra_client_base.'connect.html?disconnect='.urlencode($msg), true, 307);
 	die($msg);
 }
 
@@ -102,7 +102,7 @@ if (!empty($_REQUEST['user']) && !empty($_REQUEST['password'])) {
 
 // Check if user name is valid
 if (!in_array($user, $allowed) && preg_match('/^[a-z]{2}[0-9]{2}[a-z]{4}$/', $user) != 1) {
-	connectpage('');
+	connectpage('Invalid username');
 }
 
 
