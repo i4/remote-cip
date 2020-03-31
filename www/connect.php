@@ -1,5 +1,5 @@
 <?php
-$debug = !false;
+$debug = false;
 error_reporting($debug ? E_ALL : 0);
 
 // Parameters for Xpra server
