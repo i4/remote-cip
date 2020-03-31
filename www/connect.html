@@ -16,7 +16,7 @@
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<!-- Custom styles for this template -->
 	<link href="css/signin.css" rel="stylesheet">
-	<title>Xpra HTML5 Client</title>
+	<title>Remote SPiC-IDE via Xpra HTML5 Client</title>
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<link rel="icon" type="image/png" href="favicon.png">
 
@@ -35,16 +35,31 @@
 <body>
     <div class="container">
 
-		<form class="form-signin" action="./index.html">
+		<form class="form-signin" action="connect.php">
 
 	  	  <img src="icons/xpra-logo.png" alt="xpra logo">
-		  <h2 class="form-signin-heading">Xpra HTML5 Client</h2>
+		  <h2 class="form-signin-heading">SPiC-IDE via Xpra</h2>
 
 		  <div id="alert-disconnect" class="alert alert-info" role="alert" style="display:none;">
 		  	<p>You were disconnected for the following reason:</p>
 		  	<p><span id="disconnect-reason"></span></p>
 		  </div>
 
+		  <div class="form-group">
+			<label for="user">Username</label>
+			<input title="Username" type="text" class="form-control" id="user" placeholder="CIP User" size="16" maxlength="256">
+		  </div>
+
+		  <div class="form-group">
+			<label for="password">Password</label>
+			<input title="Password" type="password" class="form-control" id="password" placeholder="Password" size="16" maxlength="256">
+		  </div>
+
+		  <div class="form-group">
+		    <button type="submit" class="btn btn-primary" style="background-color: #b0242e; border-color: #8c1d25;">Connect</button>
+		  </div>
+
+		<div style="display:none; visibility: hidden;">
 		  <div class="form-group form-inline">
 			<label class="sr-only" for="server">Server</label>
 			<input title="Server" type="text" class="form-control" id="server" placeholder="Server" maxlength="256">
@@ -53,8 +68,6 @@
 			<br>
 			<label class="sr-only" for="username">Username</label>
 			<input title="Username" type="text" class="form-control" id="username" placeholder="Username" size="16" maxlength="256">
-			<label class="sr-only" for="password">Password</label>
-			<input title="Password" type="password" class="form-control" id="password" placeholder="Password" size="16" maxlength="256">
 			<br>
 			<div class="security-box">
 			  	<span id="ssl-span"><input type="checkbox" id="ssl"> Secure Sockets</span>
@@ -258,6 +271,7 @@
 				  </li>
 				</ul>
 			  </div>
+			</div>
 			</div>
 		  </div>
 

@@ -41,6 +41,12 @@ CIP Hosts haben kein SSL Zertifikat (und würden den Key andernfalls auch nicht 
 
 Als Umgehung werden die Ports `23200` - `23299` der CIP Hosts via Webserver getunnelt (`ws` → `wss`).
 
+    # Forward Websocket from cip1e[0-7] for Xpra
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteRule /remoteide([0-7])([0-9][0-9])/    ws://cip1e$1.cip.cs.fau.de:232$2/ [P,L]
+
+
 
 Sicherheit(sbedenken)
 ---------------------
