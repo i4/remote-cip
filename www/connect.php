@@ -17,7 +17,7 @@ for ($i = 0; $i < 32; ++$i) {
 }
 
 # HTML 5 Client
-$xpra_client_url = 'https://'.$_SERVER['HTTP_HOST'].'/xpra/index.html';
+$xpra_client_base = $_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']).'/';
 $xpra_client_param = array(
 		'ssl' => 'true',
 		'video' => 'false',
@@ -61,26 +61,6 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 	exit;
 }
 
-//.Authentication
-// Check if user/password provided
-header('Cache-Control: no-cache, must-revalidate, max-age=0');
-if (!empty($_REQUEST['user']) && !empty($_REQUEST['password'])) {
-	$user = strtolower($_REQUEST['user']);
-	$password = $_REQUEST['password'];
-} else if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-	$user = strtolower($_SERVER['PHP_AUTH_USER']);
-	$password = $_SERVER['PHP_AUTH_PW'];
-} else {
-	$user = '';
-}
-
-// Check if user name is valid
-if (!in_array($user, $allowed) && preg_match('/^[a-z]{2}[0-9]{2}[a-z]{4}$/', $user) != 1) {
-	header('HTTP/1.1 401 Authorization Required');
-	header('WWW-Authenticate: Basic realm="Access denied"');
-	exit;
-}
-
 
 // Helper
 function ssh2_exec_wrapper($con, $cmd) {
@@ -102,6 +82,29 @@ function ssh2_exec_wrapper($con, $cmd) {
 	}
 }
 
+function connectpage($msg) {
+	header('Location: '.$xpra_client_base.'connect.html'.(!empty($msg) ? '?disconnect='.urlencode($msg) : ''), true, 307);
+	die($msg);
+}
+
+//.Authentication
+// Check if user/password provided
+header('Cache-Control: no-cache, must-revalidate, max-age=0');
+if (!empty($_REQUEST['user']) && !empty($_REQUEST['password'])) {
+	$user = strtolower($_REQUEST['user']);
+	$password = $_REQUEST['password'];
+} else if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+	$user = strtolower($_SERVER['PHP_AUTH_USER']);
+	$password = $_SERVER['PHP_AUTH_PW'];
+} else {
+	$user = '';
+}
+
+// Check if user name is valid
+if (!in_array($user, $allowed) && preg_match('/^[a-z]{2}[0-9]{2}[a-z]{4}$/', $user) != 1) {
+	connectpage('');
+}
+
 
 // Try all hosts (in randomized order)
 shuffle($host_ids);
@@ -112,8 +115,7 @@ foreach ($host_ids as $host_id) {
 	if ($ssh !== false) {
 		// Authenticate
 		if (!@ssh2_auth_password($ssh, $user, $password)) {
-			header($_SERVER["SERVER_PROTOCOL"].' 401 Authorization Required', true, 401);
-			header('WWW-Authenticate: Basic realm="Access denied"');
+			connectpage("Authentication failed!");
 			exit;
 		} else {
 			// Find unused port
@@ -132,11 +134,9 @@ foreach ($host_ids as $host_id) {
 						// Set websocket
 						$xpra_client_param['path'] = '/remoteide'.$host_id.($port % 100).'/';
 						// Redirect
-						echo 'Location: '.$xpra_client_url.'?'.http_build_query($xpra_client_param);
-						header('Location: '.$xpra_client_url.'?'.http_build_query($xpra_client_param), true, 302);
+						header('Location: '.$xpra_client_base.'index.html?'.http_build_query($xpra_client_param), true, 307);
 					} else {
-						header($_SERVER["SERVER_PROTOCOL"].' 500 Internal Server Error', true, 500);
-						echo "Remote SPiC IDE host has encountered a problem.";
+						connectpage("Remote SPiC IDE host has encountered a problem.");
 					}
 					ssh2_disconnect($ssh);
 					exit;
@@ -145,6 +145,5 @@ foreach ($host_ids as $host_id) {
 		}
 	}
 }
-header($_SERVER["SERVER_PROTOCOL"].' 500 Internal Server Error', true, 500);
-echo "Remote SPiC IDE hosts are exhausted (no free slots).";
+connectpage("Remote SPiC IDE hosts are exhausted (no free slots).");
 ?>
