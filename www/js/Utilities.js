@@ -605,5 +605,10 @@ var MOVERESIZE_DIRECTION_JS_NAME = {
 
 //convert a language code into an X11 keyboard layout code:
 var LANGUAGE_TO_LAYOUT = {
+		"de"	: "de",
+		"gb"	: "uk",
+		"en"	: "us",
+		"us"	: "us",
 		"da"	: "dk",
+		"fr"	: "fr",
 }

@@ -17,6 +17,7 @@ for ($i = 0; $i < 32; ++$i) {
 }
 
 # HTML 5 Client
+$keyboard_layouts = 'de';
 $xpra_client_base = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']).'/';
 $xpra_client_param = array(
 		'ssl' => 'true',
@@ -105,6 +106,12 @@ if (!in_array($user, $allowed) && preg_match('/^[a-z]{2}[0-9]{2}[a-z]{4}$/', $us
 	connectpage('Invalid username');
 }
 
+$keyboard_layouts = array('de', 'us', 'gb', 'fr', 'ad', 'af', 'al', 'ara', 'am', 'az', 'bd', 'by', 'be', 'bt', 'ba', 'br', 'bg', 'kh', 'ca', 'cn', 'cd', 'hr', 'cz', 'dk', 'epo', 'ee', 'et', 'ir', 'iq', 'fo', 'fi', 'fr', 'ge', 'gh', 'gr', 'gn', 'hu', 'is', 'in', 'ie', 'il', 'it', 'jp', 'kz', 'kr', 'kg', 'latam', 'lv', 'la', 'lt', 'mao', 'mk', 'mv', 'ml', 'mt', 'mn', 'me', 'ma', 'mm', 'np', 'nl', 'ng', 'no', 'pk', 'pl', 'pt', 'ro', 'ru', 'sn', 'rs', 'sk', 'si', 'za', 'es', 'lk', 'se', 'ch', 'sy', 'tw', 'tj', 'tz', 'th', 'tr', 'tm', 'ua', 'uz', 'vn');
+
+if (!empty($_REQUEST['keyboard_layout']) && in_array($_REQUEST['keyboard_layout'], $keyboard_layouts)) {
+	$keyboard_layout = $_REQUEST['keyboard_layout'];
+}
+$xpra_client_param['keyboard_layout'] = $keyboard_layout;
 
 // Try all hosts (in randomized order)
 shuffle($host_ids);
