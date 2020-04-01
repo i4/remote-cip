@@ -3,11 +3,14 @@ $debug = false;
 error_reporting($debug ? E_ALL : 0);
 
 // Parameters for Xpra server
-$xpra_param = '--start-child=/proj/i4spic/bin/editor --exit-with-children=yes --idle-timeout=300 --server-idle-timeout=30 --mdns=no --webcam=off --html=off';
-
+$xpra_param = '--idle-timeout=300 --server-idle-timeout=30 --mdns=no --webcam=off --html=off';
+$xpra_mode['ide'] = 'start --start-child=/proj/i4spic/bin/editor --exit-with-children=yes';
+$xpra_mode['desktop'] = 'start-desktop --start=xfce4-session';
+// Default mode
+$mode = 'ide';
 
 // Password file for Xpra websocket auth
-$wssecretfile = '$HOME/.spic-xpra-secret';
+$wssecretfile = '$HOME/.web-xpra-secret';
 // generate a temporary websocket secret
 // (not cryptograpically secure, but it's just for a few minutes)
 $wssecretchars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -17,7 +20,7 @@ for ($i = 0; $i < 32; ++$i) {
 }
 
 # HTML 5 Client
-$xpra_client_base = 'https://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']).'/';
+$xpra_client_base = 'https://'.$_SERVER['SERVER_NAME'].'/';
 $xpra_client_param = array(
 		'ssl' => 'true',
 		'video' => 'false',
@@ -33,8 +36,8 @@ $xpra_client_param = array(
 	);
 
 // Xpra Hosts + Ports
-$host_ids = array('0', '1', '2', '3', '4', '5', '6', '7');
-$host_prefix = 'cip1e';
+$host_ids = array('1e0', '1e1', '1e2', '1e3', '1e4', '1e5', '1e6', '1e7');
+$host_prefix = 'cip';
 $host_suffix = '.cip.cs.fau.de';
 
 $ports = range(23200, 23299);
@@ -53,7 +56,7 @@ $allowed = array(
 	);
 
 
-// Use pnly HTTPS
+// Use only HTTPS
 if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 	$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	header('HTTP/1.1 301 Moved Permanently');
@@ -64,7 +67,9 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 
 // Helper
 function ssh2_exec_wrapper($con, $cmd) {
-	echo "\e[1m$cmd\e[0m\n";
+	if ($debug) {
+		echo "\e[1m$cmd\e[0m\n";
+	}
 	$stdoutStream = ssh2_exec($con, $cmd);
 	if ($stdoutStream) {
 		$stderrStream = ssh2_fetch_stream($stdoutStream, SSH2_STREAM_STDERR);
@@ -111,6 +116,12 @@ if (!empty($_REQUEST['keyboard_layout']) && in_array($_REQUEST['keyboard_layout'
 	$xpra_client_param['keyboard_layout'] = $_REQUEST['keyboard_layout'];
 }
 
+// Select mode
+if (!empty($_REQUEST['mode']) && in_array($_REQUEST['mode'], array_keys($xpra_mode))) {
+	$mode = $_REQUEST['mode'];
+}
+
+
 // Try all hosts (in randomized order)
 shuffle($host_ids);
 foreach ($host_ids as $host_id) {
@@ -126,7 +137,9 @@ foreach ($host_ids as $host_id) {
 			// Find unused port
 			shuffle($ports);
 			foreach ($ports as $port) {
-				echo "$host:$port\n";
+				if ($debug) {
+					echo "Using $host:$port\n";
+				}
 				$con = @fsockopen($host, $port, $errno, $errstr, 1);
 				if ($con) {
 					// Port in use
@@ -135,13 +148,14 @@ foreach ($host_ids as $host_id) {
 				} else {
 					// Store websocket secret on server
 					if (ssh2_exec_wrapper($ssh, 'echo -n '.$wssecret.' > '.$wssecretfile)
-					 && ssh2_exec_wrapper($ssh, 'xpra start --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
+					 && ssh2_exec_wrapper($ssh, 'chmod og-rwx '.$wssecretfile)
+					 && ssh2_exec_wrapper($ssh, 'xpra '.$xpra_mode[$mode].' --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
 						// Set websocket
-						$xpra_client_param['path'] = '/remoteide'.$host_id.($port % 100 < 10 ? '0' : '').($port % 100).'/';
+						$xpra_client_param['path'] = '/remote'.$host_id.($port % 100 < 10 ? '0' : '').($port % 100).'/';
 						// Redirect
 						header('Location: '.$xpra_client_base.'index.html?'.http_build_query($xpra_client_param), true, 307);
 					} else {
-						connectpage("Remote SPiC IDE host has encountered a problem.");
+						connectpage("Xpra host has encountered a problem.");
 					}
 					ssh2_disconnect($ssh);
 					exit;
@@ -150,5 +164,5 @@ foreach ($host_ids as $host_id) {
 		}
 	}
 }
-connectpage("Remote SPiC IDE hosts are exhausted (no free slots).");
+connectpage("Xpra hosts are exhausted (no free slots).");
 ?>

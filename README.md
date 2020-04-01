@@ -44,7 +44,7 @@ Als Umgehung werden die Ports `23200` - `23299` der CIP Hosts via Webserver getu
     # Forward Websocket from cip1e[0-7] for Xpra
     RewriteEngine On
     RewriteCond %{HTTP:Upgrade} websocket [NC]
-    RewriteRule /remoteide([0-7])([0-9][0-9])/    ws://cip1e$1.cip.cs.fau.de:232$2/ [P,L]
+    RewriteRule /remote(1e[0-7])([0-9][0-9])/    ws://cip$1.cip.cs.fau.de:232$2/ [P,L]
 
 
 
@@ -54,7 +54,7 @@ Sicherheit(sbedenken)
 Für die Xpra-Verbindung wird ein temporäres Passwort (alphanumerisch, 32 Zeichen) verwendet. Der Server beendet sich nach wenigen Sekunden Inaktivität. Das sollte ausreichend sicher sein.
 
 Das Starten der Session via SSH ist eine rein pragmatische Lösung, da bereits in 3 Wochen das Semester beginnt.
-Sofern die CIP Admins auf eine besser Lösung kommen, kann dies Lösung verworfen werden -- alternative Ansätze gibt es genug (Extra Dienst zum starten als privilegierter Nutzer mit `--uid` Parameter, Auth direkt an Kerberos, ...), jedoch fehlen uns dazu neben der Zeit auch schlicht die Berechtigung.
+Sofern die CIP Admins auf eine besser Lösung kommen, kann diese Lösung verworfen werden -- alternative Ansätze gibt es genug (Extra Dienst zum starten als privilegierter Nutzer mit `--uid` Parameter, Auth direkt an Kerberos, ...), jedoch fehlen uns dazu neben der Zeit auch schlicht die Berechtigung.
 
 Die Verwendung von Xpra selbst über den HTML5 Client (und alles via SSL) dürfte sicher sein.
 
@@ -62,4 +62,4 @@ Die Verwendung von Xpra selbst über den HTML5 Client (und alles via SSL) dürft
 Schlusswort
 -----------
 
-Für dieses Semester werden die üblichen regularien außer Kraft gesetzt.
+Für dieses Semester werden die üblichen Regularien außer Kraft gesetzt.
