@@ -42,20 +42,6 @@ $host_suffix = '.cip.cs.fau.de';
 
 $ports = range(23200, 23299);
 
-// Allowed users (besides IDM)
-$allowed = array(
-		'heinloth',
-		'herzog',
-		'rheinfels',
-		'sieh',
-		'eichler',
-		'nguyen',
-		'rabenstein',
-		'schuster',
-		'lawniczak',
-	);
-
-
 // Use only HTTPS
 if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 	$location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -103,11 +89,6 @@ if (!empty($_REQUEST['user']) && !empty($_REQUEST['password'])) {
 	$password = $_SERVER['PHP_AUTH_PW'];
 } else {
 	$user = '';
-}
-
-// Check if user name is valid
-if (!in_array($user, $allowed) && preg_match('/^[a-z]{2}[0-9]{2}[a-z]{4}$/', $user) != 1) {
-	connectpage('Invalid username');
 }
 
 $keyboard_layouts = array('de', 'us', 'gb', 'fr', 'ad', 'af', 'al', 'ara', 'am', 'az', 'bd', 'by', 'be', 'bt', 'ba', 'br', 'bg', 'kh', 'ca', 'cn', 'cd', 'hr', 'cz', 'dk', 'epo', 'ee', 'et', 'ir', 'iq', 'fo', 'fi', 'fr', 'ge', 'gh', 'gr', 'gn', 'hu', 'is', 'in', 'ie', 'il', 'it', 'jp', 'kz', 'kr', 'kg', 'latam', 'lv', 'la', 'lt', 'mao', 'mk', 'mv', 'ml', 'mt', 'mn', 'me', 'ma', 'mm', 'np', 'nl', 'ng', 'no', 'pk', 'pl', 'pt', 'ro', 'ru', 'sn', 'rs', 'sk', 'si', 'za', 'es', 'lk', 'se', 'ch', 'sy', 'tw', 'tj', 'tz', 'th', 'tr', 'tm', 'ua', 'uz', 'vn');
