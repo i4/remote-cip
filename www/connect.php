@@ -10,7 +10,7 @@ $xpra_mode['desktop'] = 'start-desktop --start=xfce4-session';
 $mode = 'ide';
 
 // Password file for Xpra websocket auth
-$wssecretfile = '$HOME/.web-xpra-secret';
+$wssecretfile = '$XDG_RUNTIME_DIR/web-xpra-secret';
 // generate a temporary websocket secret
 // (not cryptograpically secure, but it's just for a few minutes)
 $wssecretchars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -147,8 +147,7 @@ foreach ($host_ids as $host_id) {
 					break;
 				} else {
 					// Store websocket secret on server
-					if (ssh2_exec_wrapper($ssh, 'echo -n '.$wssecret.' > '.$wssecretfile)
-					 && ssh2_exec_wrapper($ssh, 'chmod og-rwx '.$wssecretfile)
+					if (ssh2_exec_wrapper($ssh, 'umask 077; echo -n '.$wssecret.' > '.$wssecretfile)
 					 && ssh2_exec_wrapper($ssh, 'xpra '.$xpra_mode[$mode].' --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
 						// Set websocket
 						$xpra_client_param['path'] = '/remote'.$host_id.($port % 100 < 10 ? '0' : '').($port % 100).'/';
