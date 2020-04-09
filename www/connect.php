@@ -4,10 +4,12 @@ error_reporting($debug ? E_ALL : 0);
 
 // Parameters for Xpra server
 $xpra_param = '--idle-timeout=300 --server-idle-timeout=30 --mdns=no --webcam=off --html=off';
-$xpra_mode['ide'] = 'start --start-child=/proj/i4spic/bin/editor --exit-with-children=yes';
-$xpra_mode['desktop'] = 'start-desktop --start=xfce4-session';
+$xpra_mode['xfce'] = 'start-desktop --start=xfce4-session';
+$xpra_mode['xterm'] = 'start --start=xterm';
+$xpra_mode['spic-ide'] = 'start --start-child=/proj/i4spic/bin/editor --exit-with-children=yes';
+
 // Default mode
-$mode = 'ide';
+$application = 'xfce';
 
 // Password file for Xpra websocket auth
 $wssecretfile = '$XDG_RUNTIME_DIR/web-xpra-secret';
@@ -97,9 +99,9 @@ if (!empty($_REQUEST['keyboard_layout']) && in_array($_REQUEST['keyboard_layout'
 	$xpra_client_param['keyboard_layout'] = $_REQUEST['keyboard_layout'];
 }
 
-// Select mode
-if (!empty($_REQUEST['mode']) && in_array($_REQUEST['mode'], array_keys($xpra_mode))) {
-	$mode = $_REQUEST['mode'];
+// Select application
+if (!empty($_REQUEST['application']) && in_array($_REQUEST['application'], array_keys($xpra_mode))) {
+	$application = $_REQUEST['application'];
 }
 
 
@@ -129,7 +131,7 @@ foreach ($host_ids as $host_id) {
 				} else {
 					// Store websocket secret on server
 					if (ssh2_exec_wrapper($ssh, 'umask 077; echo -n '.$wssecret.' > '.$wssecretfile)
-					 && ssh2_exec_wrapper($ssh, 'xpra '.$xpra_mode[$mode].' --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
+					 && ssh2_exec_wrapper($ssh, 'xpra '.$xpra_mode[$application].' --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
 						// Set websocket
 						$xpra_client_param['path'] = '/remote'.$host_id.($port % 100 < 10 ? '0' : '').($port % 100).'/';
 						// Redirect
