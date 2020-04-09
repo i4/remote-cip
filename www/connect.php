@@ -5,7 +5,7 @@ error_reporting($debug ? E_ALL : 0);
 // Parameters for Xpra server
 $xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no';
 $xpra_mode['xfce'] = 'start-desktop --start=xfce4-session';
-$xpra_mode['xterm'] = 'start --start=xterm';
+$xpra_mode['xterm'] = 'start --start-child=xterm --exit-with-children=yes';
 $xpra_mode['spic-ide'] = 'start --start-child=/proj/i4spic/bin/editor --exit-with-children=yes';
 
 // Default mode
