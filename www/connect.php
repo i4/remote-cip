@@ -38,7 +38,7 @@ $xpra_client_param = array(
 	);
 
 // Xpra Hosts + Ports
-$host_ids = array('1e0', '1e1', '1e2', '1e3', '1e4', '1e5', '1e6', '1e7');
+$host_ids = array("4a0", "4b0", "4b1", "4b2", "4b3", "4c0", "4c1", "4c2", "4c3", "4d0", "4d1", "4d2", "4d3", "4e0", "4e1", "4e2", "4e3", "3a0", "3b0", "3b1", "3b2", "3b3", "3c0", "3c1", "3c2", "3c3", "3d0", "3d1", "3d2", "3d3", "3e0", "3e1", "3e2", "3e3", "3f0", "3f1", "3f2", "3f3");
 $host_prefix = 'cip';
 $host_suffix = '.cip.cs.fau.de';
 
