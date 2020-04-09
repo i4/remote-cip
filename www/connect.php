@@ -82,7 +82,7 @@ function connectpage($msg) {
 
 //.Authentication
 // Check if user/password provided
-header('Cache-Control: no-cache, must-revalidate, max-age=0');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 if (!empty($_REQUEST['user']) && !empty($_REQUEST['password'])) {
 	$user = strtolower($_REQUEST['user']);
 	$password = $_REQUEST['password'];
