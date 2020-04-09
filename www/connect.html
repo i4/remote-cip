@@ -145,11 +145,15 @@
 		  </div>
 
 		  <div class="form-group">
-			<label for="application">Desktop Environment or Application</label>&emsp;
+			<label for="application">Start</label>&emsp;
 			<select id="application" name="application" class="form-control">
-			  <option value="xfce">xfce</option>
-			  <option value="xterm">xterm</option>
-			  <option value="spic-ide">SPiC IDE</option>
+			  <optgroup label="Dekstop Environment">
+				<option value="xfce">xfce (default)</option>
+			  </optgroup>
+			  <optgroup label="Application">
+				<option value="xterm">xterm</option>
+				<option value="spic-ide">SPiC IDE</option>
+			  </optgroup>
 			</select>
 		  </div>
 
