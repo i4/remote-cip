@@ -180,22 +180,15 @@ if(applications.includes(app)) {
 	}
 }
 
-const disconnect_reasons = ["server shutdown", "idle timeout", "Authentication failed!", "Xpra host has encountered a problem.",
-							"Xpra hosts are exhausted (no free slots).", "Did not receive hello before timeout reached, not an Xpra server?",
-							"unknown reason", null]
-
 $(document).ready(function() {
 	var getparam = Utilities.getparam;
 	var getboolparam = Utilities.getboolparam;
 
 	var disconnect_reason = getparam("disconnect") || null;
-	if(!disconnect_reasons.includes(disconnect_reason)) {
-		disconnect_reason = "Unknown Error";
-	}
 
 	if(disconnect_reason) {
 		document.getElementById("alert-disconnect").style.display = "block";
-		document.getElementById("disconnect-reason").innerHTML = disconnect_reason;
+		document.getElementById("disconnect-reason").innerText = disconnect_reason;
 	}
 
 	var keyboard_layout = getparam("keyboard_layout");
