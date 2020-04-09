@@ -32,7 +32,7 @@
 
 		<form class="form-signin" action="connect.php" method="post">
 
-	  	  <img src="icons/xpra-logo.png" alt="xpra logo">
+		  <img src="icons/xpra-logo.png" id="logo" alt="xpra logo">
 		  <h2 class="form-signin-heading">SPiC-IDE via Xpra</h2>
 
 		  <div id="alert-disconnect" class="alert alert-danger" role="alert" style="display:none;">
@@ -145,13 +145,12 @@
 		  </div>
 
 		  <div class="form-group">
-			<div class="form-check">
-			  <input class="form-check-input" type="radio" name="mode" id="mode_ide" value="ide" checked>
-			  <label class="form-check-label" for="mode_ide">SPiC-IDE only</label>
-			</div>
-			<div class="form-check">
-			  <input class="form-check-input" type="radio" name="mode" id="mode_desktop" value="desktop">
-			  <label class="form-check-label" for="mode_desktop">Full Desktop</label>
+			<label for="application">Desktop Environment or Application</label>&emsp;
+			<select id="application" name="application" class="form-control">
+			  <option value="xfce">xfce</option>
+			  <option value="xterm">xterm</option>
+			  <option value="spic-ide">SPiC IDE</option>
+			</select>
 		  </div>
 
 		  <div class="form-group">
@@ -165,6 +164,21 @@
     <div class="bg-image"></div>
 
 <script type="text/javascript">
+
+const applications = $("#application option").map(function() { return this.value; }).get();
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const app = urlParams.get("app");
+
+if(applications.includes(app)) {
+	$("#application").val(app);
+
+	if(app == "spic-ide") {
+		$('div.bg-image').css('background-image', 'url(background-spic.jpg)');
+		$("#logo").attr("src", "icons/xpra-logo-spic.png");
+	}
+}
 
 $(document).ready(function() {
 	var getparam = Utilities.getparam;
