@@ -16,7 +16,7 @@
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<!-- Custom styles for this template -->
 	<link href="css/signin.css" rel="stylesheet">
-	<title>Remote SPiC-IDE via Xpra HTML5 Client</title>
+	<title>Remote CIP via Xpra HTML5 Client</title>
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<link rel="icon" type="image/png" href="favicon.png">
 
@@ -32,10 +32,10 @@
 
 		<form class="form-signin" action="connect.php" method="post">
 
-		  <img src="icons/xpra-logo.png" id="logo" alt="xpra logo">
-		  <h2 class="form-signin-heading">SPiC-IDE via Xpra</h2>
+		  <p><img src="icons/xpra-logo.png" id="logo" alt="CIP Xpra"></p>
+		  <br/>
 
-		  <div id="alert-disconnect" class="alert alert-danger" role="alert" style="display:none;">
+		  <div id="alert-disconnect" class="alert alert-info" role="alert" style="display:none;">
 		  	<p>You were disconnected for the following reason:</p>
 		  	<p><span id="disconnect-reason"></span></p>
 		  </div>
@@ -158,7 +158,7 @@
 		  </div>
 
 		  <div class="form-group">
-		    <button type="submit" class="btn btn-primary" style="background-color: #b0242e; border-color: #8c1d25;">Connect</button>
+		    <button type="submit" class="btn btn-primary">Connect</button>
 		  </div>
 		</form>
 
@@ -177,11 +177,6 @@ const app = urlParams.get("app");
 
 if(applications.includes(app)) {
 	$("#application").val(app);
-
-	if(app == "spic-ide") {
-		$('div.bg-image').css('background-image', 'url(background-spic.jpg)');
-		$("#logo").attr("src", "icons/xpra-logo-spic.png");
-	}
 }
 
 $(document).ready(function() {
