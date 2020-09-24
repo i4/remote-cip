@@ -59,6 +59,13 @@ Sofern die CIP Admins auf eine besser Lösung kommen, kann diese Lösung verworf
 Die Verwendung von Xpra selbst über den HTML5 Client (und alles via SSL) dürfte sicher sein.
 
 
+Lizenz
+------
+
+Der HTML5 Client von Xpra wurde unter der **Mozilla Public License Version 2.0 (MPLv2)** veröffentlicht.
+Die Anpassungen für den Einsatz im CIP (v.a. `connect.php`) steht unter der **GNU General Public License (GPLv3)**.
+
+
 Schlusswort
 -----------
 
