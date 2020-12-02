@@ -31,14 +31,14 @@ SOFTWARE.
     }
 
     function forEach(collection, iterator){
-        for(var key in Object.keys(collection)){
+        for(const key in Object.keys(collection)){
             iterator(collection[key]);
         }
     }
 
-    function showMenu(menu){
-        var menu = this;
-        var ul = $("ul", menu)[0];
+    function showMenu(){
+        const menu = this;
+        const ul = $("ul", menu)[0];
         //hack to hide the menu from javascript
         if(!ul){
 			return;
@@ -48,7 +48,7 @@ SOFTWARE.
 			ul.classList.remove("-hide");
 			ul.parentElement.classList.remove("-active");
 			return;
-		};
+		}
 
         if(ul.classList.contains("-visible")){
 			return;
@@ -58,13 +58,13 @@ SOFTWARE.
         ul.classList.add("-animating");
         ul.classList.add("-visible");
         setTimeout(function(){
-            ul.classList.remove("-animating")
+            ul.classList.remove("-animating");
         }, 25);
     }
 
-    function hideMenu(menu){
-        var menu = this;
-        var ul = $("ul", menu)[0];
+    function hideMenu(){
+        const menu = this;
+        const ul = $("ul", menu)[0];
 
         if(!ul || !ul.classList.contains("-visible")) return;
 
@@ -76,8 +76,8 @@ SOFTWARE.
         }, 300);
     }
 
-    function hideAllInactiveMenus(menu){
-        var menu = this;
+    function hideAllInactiveMenus(){
+        const menu = this;
         forEach(
             $("li.-hasSubmenu.-active:not(:hover)", menu.parent),
             function(e){
@@ -86,8 +86,8 @@ SOFTWARE.
         );
     }
 
-    function hideAllMenus(menu){
-        var menu = this;
+    function hideAllMenus(){
+        const menu = this;
         forEach(
             $("li.-hasSubmenu", menu.parent),
             function(e){

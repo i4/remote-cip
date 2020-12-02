@@ -9,14 +9,20 @@ div.bg-image {
 	margin:0;
 	top:0;
 	left:0;
-	background-image: url(../background.jpg);
-	background-position: center center;
+	background-image: url(../background.png);
+	background-position: right bottom;
 	background-repeat: no-repeat;
-	background-size: cover;
+	background-size: contain;
+	background-color: #ffffff;
 	opacity: 0.3;
 	z-index: -1000;
 }
 
+footer {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
 div.container {
 	margin-top: 40px;
 	margin-bottom: 40px;

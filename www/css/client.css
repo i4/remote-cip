@@ -4,11 +4,11 @@ html, body {
 	padding: 0;
 	margin: 0;
 	overflow: hidden;
-	background-color: #021d3a;
-	background-image: url(../background.jpg);
-	background-position: center center;
+	background-image: url(../background.png);
+	background-position: right bottom;
 	background-repeat: no-repeat;
-	background-size: cover;
+	background-size: contain;
+	background-color: #ffffff;
 }
 
 div.window canvas {
@@ -147,8 +147,11 @@ canvas {
 }
 div.windowinfocus {
 	z-index: 5000;
-	background-color: white;
 }
+div.windowinfocus div.windowhead {
+	background-color: #A0A0A0;
+}
+
 .modal {
 	z-index: 20000;
 }
@@ -304,6 +307,17 @@ div.windowinfocus {
 }
 #bugreport {
 	text-align: left;
+}
+
+#shadow_pointer {
+	width : 32px;
+	height: 32px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 1px;
+	z-index: 100000;
+	display: none;
 }
 
 table#sessiondata {

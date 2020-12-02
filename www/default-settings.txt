@@ -1,0 +1,7 @@
+ssl = true
+video = false
+printing = false
+reconnect = true
+sound = false
+steal = true
+encoding = auto

@@ -25,7 +25,7 @@ SOFTWARE.
 
 #float_menu { 
     display: inline-block;
-	height: 30px; 
+	height: 22px; 
 	padding: 0px 0px 0px 20px; 
 	z-index: 100000; 
 	background: repeating-linear-gradient(
@@ -55,8 +55,8 @@ SOFTWARE.
 .menu-content-left {
     white-space: nowrap;
     float: left;
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     padding: 3px 2px;
     vertical-align:middle;
     text-decoration: none;
@@ -68,7 +68,7 @@ SOFTWARE.
     float: right;
     width: 16px;
     height: 16px;
-    padding: 7px 2px;
+    padding: 3px 2px;
     vertical-align:middle;
     text-decoration: none;
     display: inline;

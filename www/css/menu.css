@@ -182,34 +182,34 @@ SOFTWARE.
     /* Height of navbar, and menu items */
     /* All of these must be of equal value */
     .Menu {
-        line-height: 30px;
+        line-height: 22px;
     }
     .Menu.-horizontal,
     .Menu li,
     .Menu li > :first-child {
-        height: 30px;
+        height: 22px;
     }
     .Menu *[data-icon]:before,
     .Menu .Icon {
-        width: 30px;
-        height: 30px;
+        width: 22px;
+        height: 22px;
     }
     .Menu *[data-icon] {
-        min-width: 30px;
-        min-height: 30px;
-        padding-left: 30px;
+        min-width: 22px;
+        min-height: 22px;
+        padding-left: 22px;
     }
 
     /* Default font settings for menu */
     .Menu {
         font-family: Arial, Helvetica, Sans;
-        font-size: 16px;
+        font-size: 12px;
     }
 
     /* Icon font sizes */
     .Menu *[data-icon]:before,
     .Menu .Icon {
-        font-size: 24px;
+        font-size: 18px;
     }
     /* For submenus */
     .Menu > li ul .Icon,
@@ -217,7 +217,7 @@ SOFTWARE.
     .Menu > li ul *[data-icon]:before,
     .Menu.-floating *[data-icon]:before,
     {
-        font-size: 18px;
+        font-size: 14px;
     }
 
     /* Colouring of menus */
@@ -244,7 +244,7 @@ SOFTWARE.
     }
     .Menu li li.-hasSubmenu > a,
     .Menu:not(.-horizontal) > li.-hasSubmenu > a {
-        padding-right: 28px;
+        padding-right: 20px;
     }
 
     /* Minimum width of dropdown menus */
