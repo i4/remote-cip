@@ -20,22 +20,22 @@ $debug = false;
 error_reporting($debug ? E_ALL : 0);
 
 // Parameters for Xpra server
-$xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no';
+$xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --exit-with-client=yes --terminate-children=yes';
+$xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto';
 $xpra_mode['xfce'] = 'start-desktop --start=xfce4-session';
 $xpra_mode['xterm'] = 'start --start-child=xterm --exit-with-children=yes';
 $xpra_mode['spic-ide'] = 'start --start-child=/proj/i4spic/bin/editor --exit-with-children=yes';
+$xpra_mode['path'] = 'start --exit-with-children=yes --start-child=';
 
 // Default mode
-$application = 'xfce';
+$application = $xpra_mode['xfce'];
 
-// Password file for Xpra websocket auth
-$wssecretfile = '$XDG_RUNTIME_DIR/web-xpra-secret';
 // generate a temporary websocket secret
 // (not cryptograpically secure, but it's just for a few minutes)
 $wssecretchars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 $wssecret = '';
-for ($i = 0; $i < 32; ++$i) {
-	$wssecret .= $wssecretchars[random_int(0, strlen($wssecretchars))];
+while (strlen($wssecret) != 32) {
+	$wssecret .= $wssecretchars[random_int(0, strlen($wssecretchars) - 1)];
 }
 
 # HTML 5 Client
@@ -54,10 +54,14 @@ $xpra_client_param = array(
 		'password' => $wssecret
 	);
 
+
 // Xpra Hosts + Ports
-$host_ids = array("4a0", "4b0", "4b1", "4b2", "4b3", "4c0", "4c1", "4c2", "4c3", "4d0", "4d1", "4d2", "4d3", "4e0", "4e1", "4e2", "4e3", "3a0", "3b0", "3b1", "3b2", "3b3", "3c0", "3c1", "3c2", "3c3", "3d0", "3d1", "3d2", "3d3", "3e0", "3e1", "3e2", "3e3", "3f0", "3f1", "3f2", "3f3");
-$host_prefix = 'cip';
-$host_suffix = '.cip.cs.fau.de';
+//$host_ids = array("4a0", "4b0", "4b1", "4b2", "4b3", "4c0", "4c1", "4c2", "4c3", "4d0", "4d1", "4d2", "4d3", "4e0", "4e1", "4e2", "4e3", "3a0", "3b0", "3b1", "3b2", "3b3", "3c0", "3c1", "3c2", "3c3", "3d0", "3d1", "3d2", "3d3", "3e0", "3e1", "3e2", "3e3", "3f0", "3f1", "3f2", "3f3");
+//$host_prefix = 'cip';
+///$host_suffix = '.cip.cs.fau.de';
+$host_ids = array("bello7");
+$host_prefix = 'faui49';
+$host_suffix = '.cs.fau.de';
 
 $ports = range(23200, 23299);
 
@@ -118,9 +122,26 @@ if (!empty($_REQUEST['keyboard_layout']) && in_array($_REQUEST['keyboard_layout'
 
 // Select application
 if (!empty($_REQUEST['application']) && in_array($_REQUEST['application'], array_keys($xpra_mode))) {
-	$application = $_REQUEST['application'];
+	if ($_REQUEST['application'] == 'path') {
+		if (!empty($_REQUEST['application-path']) && preg_match('/[\/0-9a-zA-Z._-]+/i' ,$_REQUEST['application-path'])) {
+			$application = $xpra_mode['path'] . $_REQUEST['application-path'];
+		}
+	} else {
+		$application = $xpra_mode[$_REQUEST['application']];
+	}
 }
 
+// Session Sharing
+if (!empty($_REQUEST['sharing']) && $_REQUEST['sharing'] == "true") {
+	$xpra_param .= ' '.$xpra_param_sharing;
+	$xpra_client_param['floating_menu'] = 'true';
+	$xpra_client_param['sharing'] = 'true';
+} else {
+	$xpra_client_param['sharing'] = 'false';
+	if (strpos($application, 'start-desktop') === false) {
+		$xpra_client_param['floating_menu'] = 'true';
+	}
+}
 
 // Try all hosts (in randomized order)
 shuffle($host_ids);
@@ -147,10 +168,13 @@ foreach ($host_ids as $host_id) {
 					break;
 				} else {
 					// Store websocket secret on server
-					if (ssh2_exec_wrapper($ssh, 'umask 077; echo -n '.$wssecret.' > '.$wssecretfile)
-					 && ssh2_exec_wrapper($ssh, 'xpra '.$xpra_mode[$application].' --bind-ws=0.0.0.0:'.$port.' --ws-auth=file,filename='.$wssecretfile.' '.$xpra_param)) {
+					if (ssh2_exec_wrapper($ssh, 'XPRA_PASSWORD='.$wssecret.' xpra '.$application.' --bind-ws=0.0.0.0:'.$port.' --ws-auth=env '.$xpra_param)) {
 						// Set websocket
-						$xpra_client_param['path'] = '/remote'.$host_id.($port % 100 < 10 ? '0' : '').($port % 100).'/';
+						$host_link = $host_id.($port % 100 < 10 ? '0' : '').($port % 100);
+						$xpra_client_param['path'] = '/' . $host_link . '/';
+						if ($xpra_client_param['sharing'] == 'true') {
+							$xpra_client_param['shareurl'] = $xpra_client_base . $host_link . $wssecret;
+						}
 						// Redirect
 						header('Location: '.$xpra_client_base.'index.html?'.http_build_query($xpra_client_param), true, 307);
 					} else {
