@@ -20,12 +20,22 @@ $debug = false;
 error_reporting($debug ? E_ALL : 0);
 
 // Parameters for Xpra server
-$xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --exit-with-client=yes --terminate-children=yes';
+$xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --terminate-children=yes';
+// Session control
+$xpra_param .= ' --start-after-connect=/tmp/remote-cip-login.sh --start-on-last-client-exit=/tmp/remote-cip-exit.sh';
+
+// Sharing
 $xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto';
-$xpra_mode['xfce'] = 'start-desktop --start=xfce4-session';
-$xpra_mode['xterm'] = 'start --start-child=xterm --exit-with-children=yes';
-$xpra_mode['spic-ide'] = 'start --start-child=/proj/i4spic/bin/editor --exit-with-children=yes';
-$xpra_mode['path'] = 'start --exit-with-children=yes --start-child=';
+
+// Full desktop sessions (not shareable)
+$xpra_desktop = 'start-desktop --start=';
+$xpra_mode['xfce'] = $xpra_desktop . 'xfce4-session';
+
+// Application window sessions (shareable)
+$xpra_app = 'start --exit-with-children=yes --exit-with-client=yes --start-child=';
+$xpra_mode['xterm'] = $xpra_app . 'xterm';
+$xpra_mode['spic-ide'] = $xpra_app . '/proj/i4spic/bin/editor';
+$xpra_mode['path'] = $xpra_app;
 
 // Default mode
 $application = $xpra_mode['xfce'];
@@ -138,7 +148,7 @@ if (!empty($_REQUEST['sharing']) && $_REQUEST['sharing'] == "true") {
 	$xpra_client_param['sharing'] = 'true';
 } else {
 	$xpra_client_param['sharing'] = 'false';
-	if (strpos($application, 'start-desktop') === false) {
+	if (strpos($application, $xpra_desktop) === false) {
 		$xpra_client_param['floating_menu'] = 'true';
 	}
 }
@@ -167,11 +177,12 @@ foreach ($host_ids as $host_id) {
 					fclose($con);
 					break;
 				} else {
+					$host_link = $host_id.($port % 100 < 10 ? '0' : '').($port % 100);
 					// Store websocket secret on server
 					if (ssh2_exec_wrapper($ssh, 'XPRA_PASSWORD='.$wssecret.' xpra '.$application.' --bind-ws=0.0.0.0:'.$port.' --ws-auth=env '.$xpra_param)) {
 						// Set websocket
-						$host_link = $host_id.($port % 100 < 10 ? '0' : '').($port % 100);
 						$xpra_client_param['path'] = '/' . $host_link . '/';
+						// Set sharing
 						if ($xpra_client_param['sharing'] == 'true') {
 							$xpra_client_param['shareurl'] = $xpra_client_base . $host_link . $wssecret;
 						}

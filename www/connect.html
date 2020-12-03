@@ -34,6 +34,7 @@
 		<form class="form-signin" action="connect.php" method="post">
 
 		  <h2><b>Remote CIP</b> via Xpra</h2>
+		  <p>Graphical remote access to the <a href="https://wwwcip.cs.fau.de/index.en.html">computer labs (CIP-Pools)</a> of the <a href="https://www.cs.fau.de/">Department of Computer Science</a> at <a href="https://www.fau.de/">Friedrich-Alexander University Erlangen-Nuremberg</a>.</p>
 		  <br/>
 
 		  <div id="alert-disconnect" class="alert alert-info" role="alert" style="display:none;">
@@ -165,6 +166,9 @@
 		  <div class="form-check hidden" id="share">
 			<input type="checkbox" class="form-check-input" id="sharing" name="sharing" value="true">
 			<label class="form-check-label" for="sharing" >Allow sharing of this session</label>
+			<div class="alert alert-danger" role="alert">
+			  Each client joining by the session link (which can be gathered from the menu) will gain the same permissions as the session creator!
+			</div>
 		  </div>
 
 		  <div class="form-group">
@@ -173,9 +177,10 @@
 		</form>
 
 	</div> <!-- /container -->
-	<footer class="navbar navbar-fixed-bottom">
-		<p class="navbar-text">
-		<a href="https://remote.cip.cs.fau.de/">Remote CIP</a> based on <a href="https://xpra.org/">Xpra</a>, source at <a href="https://github.com/i4/remote-cip">GitHub</a> </p>
+	<footer class="navbar navbar-bottom">
+	  <p class="navbar-text small">
+		<a href="https://remote.cip.cs.fau.de/">Remote CIP</a> is based on <a href="https://xpra.org/">Xpra</a> and customized by <a href="https://www4.cs.fau.de/">Department of Computer Science 4</a> (source available at <a href="https://github.com/i4/remote-cip">GitHub</a>)
+	  </p>
 	</footer>
 
 	<div class="bg-image"></div>

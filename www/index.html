@@ -3,7 +3,7 @@
 	<head>
 
 		<!--
-			Copyright (c) 2013-2019 Antoine Martin <antoine@xpra.org>
+			Copyright (c) 2013-2020 Antoine Martin <antoine@xpra.org>
 			Copyright (c) 2014 Joshua Higgins <josh@kxes.net>
 			Licensed under MPL 2.0
  		-->
@@ -72,7 +72,7 @@
 							<li><a href="#" data-icon="info" onclick="show_about(event); return false">About Xpra</a></li>
 							<li><a href="#" data-icon="trending_up" onclick="show_sessioninfo(event); return false">Session Info</a></li>
 							<li><a href="#" data-icon="exit_to_app" onclick="client.disconnect_reason='User request'; client.close(); return false">Disconnect</a></li>
-							<li id="server_shutdown"><a href="#" data-icon="cancel" onclick="confirm_shutdown_server(event); return false">Shutdown Server</a></li>
+							<li id="server_shutdown"><a href="#" data-icon="cancel" onclick="confirm_shutdown_server(event); return false">Shutdown Session</a></li>
 						</ul>
 					</li>
 					<li class="-hasSubmenu -noChevron">
@@ -205,7 +205,7 @@
 			};
 
 			function confirm_shutdown_server() {
-				if (confirm("Shutdown this server?")) {
+				if (confirm("Shutdown this session (and disconnect all other clients)?")) {
 					client.send(["shutdown-server"]);
 				}
 			}
@@ -929,7 +929,7 @@
 				copyText.select();
 				copyText.setSelectionRange(0, 99999); /*For mobile devices*/
 				document.execCommand("copy");
-				alert("Link: " + copyText.value);
+				alert("To join this session use this link: " + copyText.value + " (copied to clipboard)");
 			}
 
 			let client;
