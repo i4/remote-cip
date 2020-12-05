@@ -44,12 +44,16 @@ elif [[ $action == "close" ]] ; then
 elif [[ $action == "list" ]] ; then
 	active=0
 	echo "Active Remote CIP Sessions:"
-	while IFS= read line ; do
-		if [[ $line =~ ^([a-z0-9]+)\;([0-9]+)\;(.*)$ ]] ; then
-			echo -e " [$($0 status "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")] ${BASH_REMATCH[1]} (PID ${BASH_REMATCH[2]}) \e[2mstarted ${BASH_REMATCH[3]}\e[0m"
-			active=$((active + 1))
-		fi
-	done < "$SESSIONFILE"
+	if [[ -f "$SESSIONFILE" ]] ; then
+		lines=$(<$SESSIONFILE)
+		while IFS=$'\n' read line ; do
+			if [[ $line =~ ^([a-z0-9]+)\;([0-9]+)\;(.*)$ ]] ; then
+				echo -e " [$($0 status "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" || echo -e "\e[33munknown\e[0m")] ${BASH_REMATCH[1]} (PID ${BASH_REMATCH[2]}) \e[2mstarted ${BASH_REMATCH[3]}\e[0m" &
+				active=$((active + 1))
+			fi
+		done <<< "$lines"
+		wait
+	fi
 
 	if [[ $active -eq 0 ]] ; then
 		echo "(none)"

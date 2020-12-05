@@ -19,22 +19,32 @@
 $debug = false;
 error_reporting($debug ? E_ALL : 0);
 
+// Path to Xpra binary
+$xpra_bin = '/local/xpra-4.0.X/bin/xpra';
+
 // Parameters for Xpra server
 $xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --terminate-children=yes';
 // Session control
-$xpra_param .= ' --start-after-connect=/tmp/remote-cip-login.sh --start-on-last-client-exit=/tmp/remote-cip-exit.sh';
+$xpra_param .= ' --start-after-connect=/proj/ciptmp/heinloth/remote-cip-login.sh --start-on-last-client-exit=/proj/ciptmp/heinloth/remote-cip-exit.sh';
 
 // Sharing
 $xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto';
 
 // Full desktop sessions (not shareable)
 $xpra_desktop = 'start-desktop --start=';
-$xpra_mode['xfce'] = $xpra_desktop . 'xfce4-session';
+$xpra_mode['xfce']    = $xpra_desktop . 'xfce4-session';
 
 // Application window sessions (shareable)
 $xpra_app = 'start --exit-with-children=yes --exit-with-client=yes --start-child=';
-$xpra_mode['xterm'] = $xpra_app . 'xterm';
+$xpra_mode['xterm']    = $xpra_app . 'xterm';
 $xpra_mode['spic-ide'] = $xpra_app . '/proj/i4spic/bin/editor';
+$xpra_mode['eclipse']  = $xpra_app . '/local/eclipse/bin/eclipse';
+$xpra_mode['atom']     = $xpra_app . '/proj/ciptmp/heinloth/atom.sh';
+$xpra_mode['intellij'] = $xpra_app . '/local/intellij-idea/bin/idea';
+$xpra_mode['vscode']   = $xpra_app . '/proj/ciptmp/heinloth/vscode.sh';
+$xpra_mode['vscodium'] = $xpra_app . '/proj/ciptmp/heinloth/vscodium.sh';
+$xpra_mode['matlab']   = $xpra_app . '/local/matlab/bin/matlab';
+
 $xpra_mode['path'] = $xpra_app;
 
 // Default mode
@@ -66,12 +76,9 @@ $xpra_client_param = array(
 
 
 // Xpra Hosts + Ports
-//$host_ids = array("4a0", "4b0", "4b1", "4b2", "4b3", "4c0", "4c1", "4c2", "4c3", "4d0", "4d1", "4d2", "4d3", "4e0", "4e1", "4e2", "4e3", "3a0", "3b0", "3b1", "3b2", "3b3", "3c0", "3c1", "3c2", "3c3", "3d0", "3d1", "3d2", "3d3", "3e0", "3e1", "3e2", "3e3", "3f0", "3f1", "3f2", "3f3");
-//$host_prefix = 'cip';
-///$host_suffix = '.cip.cs.fau.de';
-$host_ids = array("bello7");
-$host_prefix = 'faui49';
-$host_suffix = '.cs.fau.de';
+$host_ids = array("4a0", "4b0", "4b1", "4b2", "4b3", "4c0", "4c1", "4c2", "4c3", "4d0", "4d1", "4d2", "4d3", "4e0", "4e1", "4e2", "4e3", "3a0", "3b0", "3b1", "3b2", "3b3", "3c0", "3c1", "3c2", "3c3", "3d0", "3d1", "3d2", "3d3", "3e0", "3e1", "3e2", "3e3", "3f0", "3f1", "3f2", "3f3");
+$host_prefix = 'cip';
+$host_suffix = '.cip.cs.fau.de';
 
 $ports = range(23200, 23299);
 
@@ -179,7 +186,7 @@ foreach ($host_ids as $host_id) {
 				} else {
 					$host_link = $host_id.($port % 100 < 10 ? '0' : '').($port % 100);
 					// Store websocket secret on server
-					if (ssh2_exec_wrapper($ssh, 'XPRA_PASSWORD='.$wssecret.' xpra '.$application.' --bind-ws=0.0.0.0:'.$port.' --ws-auth=env '.$xpra_param)) {
+					if (ssh2_exec_wrapper($ssh, 'XPRA_PASSWORD='.$wssecret.' ' . $xpra_bin. ' '.$application.' --bind-ws=0.0.0.0:'.$port.' --ws-auth=env '.$xpra_param)) {
 						// Set websocket
 						$xpra_client_param['path'] = '/' . $host_link . '/';
 						// Set sharing

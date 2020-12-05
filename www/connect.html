@@ -153,8 +153,14 @@
 				<option value="xfce">xfce (default)</option>
 			  </optgroup>
 			  <optgroup label="Application" shareable="true">
-				<option value="xterm">xterm</option>
+				<option value="xterm">Terminal (xterm)</option>
 				<option value="spic-ide">SPiC IDE</option>
+				<option value="eclipse">Eclipse</option>
+				<option value="atom">Atom</option>
+				<option value="intellij">IntelliJ IDEA</option>
+				<option value="vscode">VSCode</option>
+				<option value="vscodium">VSCodium</option>
+				<option value="matlab">Matlab</option>
 			  </optgroup>
 			  <optgroup label="Custom" shareable="true">
 				<option value="path">Application...</option>
@@ -164,10 +170,11 @@
 		  </div>
 
 		  <div class="form-check hidden" id="share">
-			<input type="checkbox" class="form-check-input" id="sharing" name="sharing" value="true">
+			<input type="checkbox" class="form-check-input" id="sharing" name="sharing" value="true" onchange='handleWarning(this);'>
 			<label class="form-check-label" for="sharing" >Allow sharing of this session</label>
-			<div class="alert alert-danger" role="alert">
-			  Each client joining by the session link (which can be gathered from the menu) will gain the same permissions as the session creator!
+			<div id="share-warn" class="alert alert-danger hidden" role="alert">
+			  Each client joining by the session link (which can be gathered from the menu) will gain the same permissions as the session creator!<br>
+			  You can use the util <tt>/proj/ciptmp/heinloth/remote-cip.sh</tt> to manage (kill) your sessions!
 			</div>
 		  </div>
 
@@ -207,6 +214,14 @@ function checkCustomApp() {
 		$("#share").addClass('hidden');
 	} else {
 		$("#share").removeClass('hidden');
+	}
+}
+
+function handleWarning(item) {
+	if (item.checked == true) {
+		$("#share-warn").removeClass('hidden');
+	} else {
+		$("#share-warn").addClass('hidden');
 	}
 }
 
