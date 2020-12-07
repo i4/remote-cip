@@ -22,14 +22,26 @@ Voraussetzung
 -------------
 
  - Webserver: Apache mit *mod_php* (`libapache2-mod-php`) sowie *ssh2* (`php-ssh2`)
- - CIP Hosts: Modernes Xpra (≥ 3.0 z.B. aus backports)
+ - CIP Hosts: Modernes [Xpra (≥ 4.0)](https://xpra.org/trac/wiki/Download#Linux)
+
+
+Vorbereitung
+------------
+
+Mittels
+
+    make
+
+werden Dateien (vor allem JavaScript & CSS) komprimiert, danach muss der Apache so konfiguriert werden, dass der Unterordner `wwww` das Wurzelverzeichnis für den Webserver ist.
+Außerdem sollten bei Bedarf noch `connect.php`, `connect.html` und `.htaccess` an die Infrastruktur angepasst werden.
+Und fertig.
 
 
 Ablauf
 ------
 
 Der Nutzer meldet sich mit seinen CIP Daten via Web an.
-Der Webserver baut eine SSH Verbindung zu einem CIP Host (derzeit `cip1e0` - `cip1e7`) auf, startet dort eine Xpra Session mit der *SPiC-IDE* als entsprechender Nutzer.
+Der Webserver baut eine SSH Verbindung zu einem CIP Host auf, startet dort eine Xpra Session mit der *SPiC-IDE* (oder einer anderen Anwendung) als entsprechender Nutzer.
 Danach wird der Nutzer auf den HTML5 Client umgeleitet.
 
 
@@ -41,10 +53,10 @@ CIP Hosts haben kein SSL Zertifikat (und würden den Key andernfalls auch nicht 
 
 Als Umgehung werden die Ports `23200` - `23299` der CIP Hosts via Webserver getunnelt (`ws` → `wss`).
 
-    # Forward Websocket from cip1e[0-7] for Xpra
+    # Forward Websocket from CIP for Xpra
     RewriteEngine On
     RewriteCond %{HTTP:Upgrade} websocket [NC]
-    RewriteRule /remote(1e[0-7])([0-9][0-9])/    ws://cip$1.cip.cs.fau.de:232$2/ [P,L]
+    RewriteRule ([0-9][a-z][0-9])([0-9][0-9])    ws://cip$1.cip.cs.fau.de:232$2/ [P,L]
 
 
 
@@ -63,7 +75,7 @@ Lizenz
 ------
 
 Der HTML5 Client von Xpra wurde unter der **Mozilla Public License Version 2.0 (MPLv2)** veröffentlicht.
-Die Anpassungen für den Einsatz im CIP (v.a. `connect.php`) steht unter der **GNU General Public License (GPLv3)**.
+Die Anpassungen für den Einsatz im CIP steht unter der **GNU General Public License (GPLv3)**.
 
 
 Schlusswort
