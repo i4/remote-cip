@@ -29,7 +29,7 @@ $xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=o
 $xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto --start-after-connect=/proj/ciptmp/heinloth/exit-with-first-client.sh ';
 
 // Full desktop sessions (not shareable)
-$xpra_desktop = 'start-desktop --start=';
+$xpra_desktop = 'start-desktop --start-after-connect=/proj/ciptmp/heinloth/disable-bell.sh --start=';
 $xpra_mode['xfce']    = $xpra_desktop . 'xfce4-session';
 
 // Application window sessions (shareable)

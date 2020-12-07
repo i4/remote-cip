@@ -33,7 +33,7 @@ Mittels
     make
 
 werden Dateien (vor allem JavaScript & CSS) komprimiert, danach muss der Apache so konfiguriert werden, dass der Unterordner `wwww` das Wurzelverzeichnis für den Webserver ist.
-Außerdem sollten bei Bedarf noch `connect.php`, `connect.html` und `.htaccess` an die Infrastruktur angepasst werden.
+Außerdem sollten bei Bedarf noch die Dateien unter `bin/` auf die CIP Rechner verteilt und `connect.php`, `connect.html` und `.htaccess` an die Infrastruktur angepasst werden.
 Und fertig.
 
 
