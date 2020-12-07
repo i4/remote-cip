@@ -170,11 +170,10 @@
 		  </div>
 
 		  <div class="form-check hidden" id="share">
-			<input type="checkbox" class="form-check-input" id="sharing" name="sharing" value="true" onchange='handleWarning(this);'>
-			<label class="form-check-label" for="sharing" >Allow sharing of this session</label>
+			<input type="checkbox" class="form-check-input" id="sharingcb" name="sharing" value="true" onchange="handleWarning(this);">
+			<label class="form-check-label" for="sharingcb" >Allow sharing of this session</label><br>
 			<div id="share-warn" class="alert alert-danger hidden" role="alert">
-			  Each client joining by the session link (which can be gathered from the menu) will gain the same permissions as the session creator!<br>
-			  You can use the util <tt>/proj/ciptmp/heinloth/remote-cip.sh</tt> to manage (kill) your sessions!
+			  Each client joining by the session link (which can be gathered from the menu) will gain the same permissions as the session creator!
 			</div>
 		  </div>
 
@@ -235,6 +234,9 @@ $(document).ready(function() {
 		document.getElementById("alert-disconnect").style.display = "block";
 		document.getElementById("disconnect-reason").innerText = disconnect_reason;
 	}
+
+	handleWarning(document.getElementById("sharingcb"));
+	checkCustomApp();
 
 	let keyboard_layout = getparam("keyboard_layout");
 	if (keyboard_layout==null) {

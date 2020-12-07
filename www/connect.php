@@ -24,11 +24,9 @@ $xpra_bin = '/local/xpra-4.0.X/bin/xpra';
 
 // Parameters for Xpra server
 $xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --terminate-children=yes';
-// Session control
-$xpra_param .= ' --start-after-connect=/proj/ciptmp/heinloth/remote-cip-login.sh --start-on-last-client-exit=/proj/ciptmp/heinloth/remote-cip-exit.sh';
 
 // Sharing
-$xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto';
+$xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto --start-after-connect=/proj/ciptmp/heinloth/exit-with-first-client.sh ';
 
 // Full desktop sessions (not shareable)
 $xpra_desktop = 'start-desktop --start=';
