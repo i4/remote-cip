@@ -19,8 +19,10 @@
 $debug = false;
 error_reporting($debug ? E_ALL : 0);
 
-// Path to Xpra binary
-$xpra_bin = '/local/xpra-4.0.X/bin/xpra';
+// Path to Xpra binary -- Debian Bullseye has Xpra 3 in its official packages
+// however, we use https://xpra.org/dists/bullseye/main/binary-amd64/xpra_4.2.3-r7-2_amd64.deb
+// extracted in a local folder due to better performance
+$xpra_bin = 'PYTHONPATH=/local/xpra-4.2.X/usr/lib/python3/dist-packages /local/xpra-4.2.X/usr/bin/xpra';
 
 // Parameters for Xpra server
 $xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --terminate-children=yes';
