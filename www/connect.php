@@ -22,10 +22,10 @@ error_reporting($debug ? E_ALL : 0);
 // Path to Xpra binary -- Debian Bullseye has Xpra 3 in its official packages
 // however, we use https://xpra.org/dists/bullseye/main/binary-amd64/xpra_4.2.3-r7-2_amd64.deb
 // extracted in a local folder due to better performance
-$xpra_bin = 'PYTHONPATH=/local/xpra-4.2.X/usr/lib/python3/dist-packages /local/xpra-4.2.X/usr/bin/xpra';
+$xpra_bin = 'export PYTHONPATH=/local/xpra-4.2.X/usr/lib/python3/dist-packages; screen -dm /local/xpra-4.2.X/usr/bin/xpra';
 
 // Parameters for Xpra server
-$xpra_param = '--idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --terminate-children=yes';
+$xpra_param = '--daemon=no --idle-timeout=3600 --server-idle-timeout=30 --mdns=no --webcam=off --html=off --bell=no --terminate-children=yes';
 
 // Sharing
 $xpra_param_sharing = '--sharing=yes --resize-display=no --desktop-scaling=auto --start-after-connect=/proj/ciptmp/heinloth/exit-with-first-client.sh ';
@@ -93,6 +93,7 @@ if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
 
 // Helper
 function ssh2_exec_wrapper($con, $cmd) {
+	global $debug;
 	if ($debug) {
 		echo "\e[1m$cmd\e[0m\n";
 	}
@@ -186,7 +187,7 @@ foreach ($host_ids as $host_id) {
 				} else {
 					$host_link = $host_id.($port % 100 < 10 ? '0' : '').($port % 100);
 					// Store websocket secret on server
-					if (ssh2_exec_wrapper($ssh, 'XPRA_PASSWORD='.$wssecret.' ' . $xpra_bin. ' '.$application.' --bind-ws=0.0.0.0:'.$port.' --ws-auth=env '.$xpra_param)) {
+					if (ssh2_exec_wrapper($ssh, 'export XPRA_PASSWORD='.$wssecret.'; ' . $xpra_bin. ' '.$application.' --bind-ws=0.0.0.0:'.$port.' --ws-auth=env '.$xpra_param)) {
 						// Set websocket
 						$xpra_client_param['path'] = '/' . $host_link . '/';
 						// Set sharing
